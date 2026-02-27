@@ -1,6 +1,7 @@
 """
 Shared test fixtures.
 """
+
 import os
 import shutil
 import pytest
@@ -30,13 +31,19 @@ def client(app):
 @pytest.fixture()
 def auth_headers(client):
     """Register + login and return Authorization header dict."""
-    client.post("/api/v1/auth/register", json={
-        "username": "testuser",
-        "password": "TestPass123!",
-    })
-    resp = client.post("/api/v1/auth/login", json={
-        "username": "testuser",
-        "password": "TestPass123!",
-    })
+    client.post(
+        "/api/v1/auth/register",
+        json={
+            "username": "testuser",
+            "password": "TestPass123!",
+        },
+    )
+    resp = client.post(
+        "/api/v1/auth/login",
+        json={
+            "username": "testuser",
+            "password": "TestPass123!",
+        },
+    )
     token = resp.get_json()["access_token"]
     return {"Authorization": f"Bearer {token}"}

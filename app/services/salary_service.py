@@ -13,7 +13,7 @@ class SalaryService:
             employee_id=employee_id,
             basic_salary=basic,
             bonus=bonus,
-            allowances=allowances
+            allowances=allowances,
         )
         cls._salaries.append(salary)
         cls._id_counter += 1

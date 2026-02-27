@@ -1,6 +1,7 @@
 """
 Authentication service – business logic for login / register.
 """
+
 import uuid
 from typing import Optional
 

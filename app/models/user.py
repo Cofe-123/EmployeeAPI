@@ -1,6 +1,7 @@
 """
 User model.
 """
+
 from __future__ import annotations
 from dataclasses import dataclass, asdict
 from werkzeug.security import generate_password_hash, check_password_hash

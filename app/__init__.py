@@ -1,6 +1,7 @@
 """
 Flask REST API Application Factory.
 """
+
 from flask import Flask
 from app.extensions import jwt
 from app.config import config_by_name
@@ -31,6 +32,7 @@ def create_app(config_name: str = "development") -> Flask:
 
     # Register error handlers
     from app.errors import register_error_handlers
+
     register_error_handlers(app)
 
     return app

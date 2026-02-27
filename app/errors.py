@@ -1,6 +1,7 @@
 """
 Global error handlers.
 """
+
 from flask import Flask, jsonify
 from werkzeug.exceptions import HTTPException
 
@@ -30,11 +31,30 @@ def register_error_handlers(app: Flask) -> None:
 
     @app.errorhandler(500)
     def internal_server_error(error):
-        return jsonify({"error": "Internal server error", "message": "An unexpected error occurred"}), 500
+        return (
+            jsonify(
+                {
+                    "error": "Internal server error",
+                    "message": "An unexpected error occurred",
+                }
+            ),
+            500,
+        )
 
     @app.errorhandler(Exception)
     def handle_exception(error):
         if isinstance(error, HTTPException):
-            return jsonify({"error": error.name, "message": error.description}), error.code
+            return (
+                jsonify({"error": error.name, "message": error.description}),
+                error.code,
+            )
         app.logger.exception("Unhandled exception: %s", error)
-        return jsonify({"error": "Internal server error", "message": "An unexpected error occurred"}), 500
+        return (
+            jsonify(
+                {
+                    "error": "Internal server error",
+                    "message": "An unexpected error occurred",
+                }
+            ),
+            500,
+        )

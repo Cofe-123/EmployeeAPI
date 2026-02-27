@@ -1,12 +1,14 @@
 """
 Application configuration for different environments.
 """
+
 import os
 from datetime import timedelta
 
 
 class BaseConfig:
     """Base configuration."""
+
     SECRET_KEY = os.environ.get("SECRET_KEY", "change-me-in-production")
     JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "jwt-change-me-in-production")
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(
@@ -26,22 +28,23 @@ class BaseConfig:
 
 class DevelopmentConfig(BaseConfig):
     """Development configuration."""
+
     DEBUG = True
     TESTING = False
 
 
 class TestingConfig(BaseConfig):
     """Testing configuration."""
+
     DEBUG = True
     TESTING = True
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=5)
-    DATA_DIR = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "data", "test"
-    )
+    DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "test")
 
 
 class ProductionConfig(BaseConfig):
     """Production configuration."""
+
     DEBUG = False
     TESTING = False
 
