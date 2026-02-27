@@ -2,6 +2,7 @@
 Quick manual test script – exercises every API endpoint.
 Run while the server is up: python test_api_manual.py
 """
+
 import json
 import urllib.request
 import urllib.error
@@ -36,37 +37,45 @@ status, data = req("GET", "/health")
 pp("1. GET /health", status, data)
 
 # ── 2. Register ──────────────────────────────────
-status, data = req("POST", "/auth/register", {
-    "username": "demo_admin",
-    "password": "Demo@123"
-})
+status, data = req(
+    "POST", "/auth/register", {"username": "demo_admin", "password": "Demo@123"}
+)
 pp("2. POST /auth/register", status, data)
 
 # ── 3. Login ─────────────────────────────────────
-status, data = req("POST", "/auth/login", {
-    "username": "demo_admin",
-    "password": "Demo@123"
-})
+status, data = req(
+    "POST", "/auth/login", {"username": "demo_admin", "password": "Demo@123"}
+)
 pp("3. POST /auth/login", status, data)
 TOKEN = data.get("access_token", "")
 
 # ── 4. Create Student ────────────────────────────
-status, data = req("POST", "/students", {
-    "first_name": "Alice",
-    "last_name": "Smith",
-    "email": "alice@university.com",
-    "course": "Computer Science"
-}, token=TOKEN)
+status, data = req(
+    "POST",
+    "/students",
+    {
+        "first_name": "Alice",
+        "last_name": "Smith",
+        "email": "alice@university.com",
+        "course": "Computer Science",
+    },
+    token=TOKEN,
+)
 pp("4. POST /students (create)", status, data)
 STUDENT_ID = data.get("student", {}).get("id", "")
 
 # ── 5. Create Another Student ────────────────────
-status, data = req("POST", "/students", {
-    "first_name": "Bob",
-    "last_name": "Jones",
-    "email": "bob@university.com",
-    "course": "Mathematics"
-}, token=TOKEN)
+status, data = req(
+    "POST",
+    "/students",
+    {
+        "first_name": "Bob",
+        "last_name": "Jones",
+        "email": "bob@university.com",
+        "course": "Mathematics",
+    },
+    token=TOKEN,
+)
 pp("5. POST /students (create #2)", status, data)
 
 # ── 6. List All Students ─────────────────────────
@@ -78,10 +87,12 @@ status, data = req("GET", f"/students/{STUDENT_ID}", token=TOKEN)
 pp("7. GET /students/<id> (single)", status, data)
 
 # ── 8. Update Student ────────────────────────────
-status, data = req("PUT", f"/students/{STUDENT_ID}", {
-    "course": "Data Science",
-    "last_name": "Smith-Updated"
-}, token=TOKEN)
+status, data = req(
+    "PUT",
+    f"/students/{STUDENT_ID}",
+    {"course": "Data Science", "last_name": "Smith-Updated"},
+    token=TOKEN,
+)
 pp("8. PUT /students/<id> (update)", status, data)
 
 # ── 9. Delete Student ────────────────────────────

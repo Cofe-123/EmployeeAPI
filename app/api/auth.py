@@ -1,6 +1,7 @@
 """
 Auth blueprint – register & login endpoints.
 """
+
 import os
 from flask import Blueprint, request, jsonify, current_app
 from app.models.user import User

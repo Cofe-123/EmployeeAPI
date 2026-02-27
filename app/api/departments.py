@@ -11,10 +11,7 @@ def create_department():
     if not data or "department_name" not in data or "location" not in data:
         return jsonify({"message": "Invalid input"}), 400
 
-    dept = DepartmentService.create(
-        data["department_name"],
-        data["location"]
-    )
+    dept = DepartmentService.create(data["department_name"], data["location"])
 
     return jsonify(dept.__dict__), 201
 

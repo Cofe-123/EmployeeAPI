@@ -1,7 +1,9 @@
 """
 JSON-file backed repository.
-Drop-in replacement: implement BaseRepository with SQLAlchemy to switch to a real DB.
+Drop-in replacement: implement BaseRepository with SQLAlchemy
+to switch to a real DB.
 """
+
 import json
 import os
 import threading
@@ -19,11 +21,16 @@ class JsonRepository(BaseRepository[T]):
         self._filepath = filepath
         self._model_cls = model_cls
         self._lock = threading.Lock()
+
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
         if not os.path.exists(filepath):
             self._write([])
 
-    # ---- internal helpers ----
+    # ---------------------------
+    # Internal helpers
+    # ---------------------------
+
     def _read(self) -> list[dict]:
         with open(self._filepath, "r", encoding="utf-8") as f:
             return json.load(f)
@@ -36,9 +43,14 @@ class JsonRepository(BaseRepository[T]):
         return self._model_cls.from_dict(data)  # type: ignore[attr-defined]
 
     def _to_dict(self, entity: T) -> dict:
-        return entity.to_dict(include_hash=True) if hasattr(entity, "password_hash") else entity.to_dict()  # type: ignore[attr-defined]
+        if hasattr(entity, "password_hash"):
+            return entity.to_dict(include_hash=True)  # type: ignore[attr-defined]
+        return entity.to_dict()  # type: ignore[attr-defined]
 
-    # ---- public CRUD ----
+    # ---------------------------
+    # Public CRUD
+    # ---------------------------
+
     def get_all(self) -> list[T]:
         with self._lock:
             return [self._to_model(d) for d in self._read()]
@@ -68,18 +80,22 @@ class JsonRepository(BaseRepository[T]):
     def update(self, entity_id: str, entity: T) -> Optional[T]:
         with self._lock:
             data = self._read()
+
             for i, item in enumerate(data):
                 if item.get("id") == entity_id:
                     data[i] = self._to_dict(entity)
                     self._write(data)
                     return entity
+
         return None
 
     def delete(self, entity_id: str) -> bool:
         with self._lock:
             data = self._read()
             new_data = [d for d in data if d.get("id") != entity_id]
+
             if len(new_data) == len(data):
                 return False
+
             self._write(new_data)
             return True
